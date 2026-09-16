@@ -15,7 +15,7 @@
     .gallery { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px; }
     .card { padding: 12px; border: 1px solid rgba(150,220,255,.25); border-radius: 18px; background: rgba(21,31,61,.9); box-shadow: 0 12px 34px rgba(0,0,0,.25); cursor: pointer; transition: transform .2s, border-color .2s; }
     .card:hover, .card:focus-visible { transform: translateY(-4px); border-color: var(--accent); outline: none; }
-    .card img { display: block; width: 100%; height: auto; border-radius: 10px; }
+    .thumb { width: 100%; aspect-ratio: 3 / 2; border-radius: 10px; background-image: url("thumbs/contact-sheet.webp"); background-size: 400% 400%; background-position: calc(var(--col) * 33.3333%) calc(var(--row) * 33.3333%); background-repeat: no-repeat; }
     .caption { padding: 12px 4px 2px; font-size: 16px; }
     dialog { width: min(1200px, 96vw); max-width: none; padding: 0; border: 1px solid rgba(150,220,255,.4); border-radius: 16px; color: var(--ink); background: #09101f; box-shadow: 0 20px 80px rgba(0,0,0,.7); }
     dialog::backdrop { background: rgba(0,0,0,.8); backdrop-filter: blur(4px); }
@@ -70,7 +70,7 @@
       const card = document.createElement("article");
       card.className = "card";
       card.tabIndex = 0;
-      card.innerHTML = `<img src="${encodeURI(page.thumb)}" alt="${page.label}" loading="lazy" decoding="async"><div class="caption">${page.label}</div>`;
+      card.innerHTML = `<div class="thumb" role="img" aria-label="${page.label}" style="--col:${index % 4};--row:${Math.floor(index / 4)}"></div><div class="caption">${page.label}</div>`;
       card.addEventListener("click", () => openPage(index));
       card.addEventListener("keydown", event => { if (event.key === "Enter" || event.key === " ") openPage(index); });
       gallery.append(card);
