@@ -1,0 +1,87 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>權利與義務探險隊｜漫畫畫廊</title>
+  <style>
+    :root { color-scheme: dark; --bg: #0b1224; --card: #151f3d; --ink: #eef4ff; --muted: #aebbd9; --accent: #62d5ff; }
+    * { box-sizing: border-box; }
+    body { margin: 0; min-height: 100vh; font-family: "Noto Sans TC", "Microsoft JhengHei", sans-serif; color: var(--ink); background: radial-gradient(circle at top, #1c3b68, var(--bg) 55%); }
+    main { width: min(1180px, calc(100% - 32px)); margin: 0 auto; padding: 32px 0 48px; }
+    header { margin-bottom: 24px; }
+    h1 { margin: 0 0 8px; font-size: clamp(24px, 4vw, 40px); letter-spacing: .04em; }
+    p { margin: 0; color: var(--muted); }
+    .gallery { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px; }
+    .card { padding: 12px; border: 1px solid rgba(150,220,255,.25); border-radius: 18px; background: rgba(21,31,61,.9); box-shadow: 0 12px 34px rgba(0,0,0,.25); cursor: pointer; transition: transform .2s, border-color .2s; }
+    .card:hover, .card:focus-visible { transform: translateY(-4px); border-color: var(--accent); outline: none; }
+    .card img { display: block; width: 100%; height: auto; border-radius: 10px; }
+    .caption { padding: 12px 4px 2px; font-size: 16px; }
+    dialog { width: min(1200px, 96vw); max-width: none; padding: 0; border: 1px solid rgba(150,220,255,.4); border-radius: 16px; color: var(--ink); background: #09101f; box-shadow: 0 20px 80px rgba(0,0,0,.7); }
+    dialog::backdrop { background: rgba(0,0,0,.8); backdrop-filter: blur(4px); }
+    .viewer { position: relative; padding: 18px; }
+    .viewer img { display: block; width: 100%; max-height: 82vh; object-fit: contain; }
+    button { position: absolute; top: 12px; width: 42px; height: 42px; border: 0; border-radius: 50%; color: white; background: rgba(10,20,40,.8); font-size: 24px; cursor: pointer; }
+    button:hover { background: #176a9a; }
+    #close { right: 12px; } #prev { left: 12px; top: 50%; } #next { right: 12px; top: 50%; }
+    .status { text-align: center; padding-top: 8px; color: var(--muted); }
+  </style>
+</head>
+<body>
+  <main>
+    <header>
+      <h1>權利與義務探險隊</h1>
+      <p>點選漫畫頁面即可放大閱讀；可用左右方向鍵切換。</p>
+    </header>
+    <section class="gallery" id="gallery" aria-label="漫畫頁面"></section>
+  </main>
+  <dialog id="lightbox">
+    <div class="viewer">
+      <button id="close" aria-label="關閉">×</button>
+      <button id="prev" aria-label="上一張">‹</button>
+      <img id="largeImage" alt="">
+      <button id="next" aria-label="下一張">›</button>
+      <div class="status" id="status"></div>
+    </div>
+  </dialog>
+  <script>
+    const pages = [
+      { file: "權利與義務探險隊-第1頁.png", label: "第 1 頁｜神祕的憲法之門" },
+      { file: "權利與義務探險隊-第2頁.png", label: "第 2 頁｜憲法會跟著社會改變" },
+      { file: "權利與義務探險隊-第3頁.png", label: "第 3 頁｜不一樣，也能公平參與" },
+      { file: "權利與義務探險隊-第4頁.png", label: "第 4 頁｜拒絕用標籤看人" },
+      { file: "權利與義務探險隊-第5頁.png", label: "第 5 頁｜評論和謾罵不一樣" },
+      { file: "權利與義務探險隊-第6頁.png", label: "第 6 頁｜自由的界線" },
+      { file: "權利與義務探險隊-第7頁.png", label: "第 7 頁｜小小市長選舉" },
+      { file: "權利與義務探險隊-第8頁.png", label: "第 8 頁｜人民如何參與國家" },
+      { file: "權利與義務探險隊-第9頁.png", label: "第 9 頁｜發票變成城市力量" },
+      { file: "權利與義務探險隊-第10頁.png", label: "第 10 頁｜公共的錢，要用在需要的地方" },
+      { file: "權利與義務探險隊-第11頁.png", label: "第 11 頁｜誰在守護我們？" },
+      { file: "權利與義務探險隊-第12頁.png", label: "第 12 頁｜政策為什麼會改變？" },
+      { file: "權利與義務探險隊-第13頁.png", label: "第 13 頁｜入學通知單的秘密" },
+      { file: "權利與義務探險隊-第14頁.png", label: "第 14 頁｜學習，讓未來發光" }
+    ];
+    const gallery = document.querySelector("#gallery");
+    const lightbox = document.querySelector("#lightbox");
+    const largeImage = document.querySelector("#largeImage");
+    const status = document.querySelector("#status");
+    let current = 0;
+    pages.forEach((page, index) => {
+      const card = document.createElement("article");
+      card.className = "card";
+      card.tabIndex = 0;
+      card.innerHTML = `<img src="${encodeURI(page.file)}" alt="${page.label}"><div class="caption">${page.label}</div>`;
+      card.addEventListener("click", () => openPage(index));
+      card.addEventListener("keydown", event => { if (event.key === "Enter" || event.key === " ") openPage(index); });
+      gallery.append(card);
+    });
+    function openPage(index) { current = (index + pages.length) % pages.length; largeImage.src = encodeURI(pages[current].file); largeImage.alt = pages[current].label; status.textContent = `${pages[current].label}（${current + 1} / ${pages.length}）`; lightbox.showModal(); }
+    function step(delta) { openPage(current + delta); }
+    document.querySelector("#close").addEventListener("click", () => lightbox.close());
+    document.querySelector("#prev").addEventListener("click", () => step(-1));
+    document.querySelector("#next").addEventListener("click", () => step(1));
+    lightbox.addEventListener("click", event => { if (event.target === lightbox) lightbox.close(); });
+    document.addEventListener("keydown", event => { if (!lightbox.open) return; if (event.key === "ArrowLeft") step(-1); if (event.key === "ArrowRight") step(1); if (event.key === "Escape") lightbox.close(); });
+  </script>
+</body>
+</html>
