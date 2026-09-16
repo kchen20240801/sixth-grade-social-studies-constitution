@@ -46,20 +46,20 @@
   </dialog>
   <script>
     const pages = [
-      { file: "權利與義務探險隊-第1頁.png", thumb: "thumbs/page-01.webp", label: "第 1 頁｜神祕的憲法之門" },
-      { file: "權利與義務探險隊-第2頁.png", thumb: "thumbs/page-02.webp", label: "第 2 頁｜憲法會跟著社會改變" },
-      { file: "權利與義務探險隊-第3頁.png", thumb: "thumbs/page-03.webp", label: "第 3 頁｜不一樣，也能公平參與" },
-      { file: "權利與義務探險隊-第4頁.png", thumb: "thumbs/page-04.webp", label: "第 4 頁｜拒絕用標籤看人" },
-      { file: "權利與義務探險隊-第5頁.png", thumb: "thumbs/page-05.webp", label: "第 5 頁｜評論和謾罵不一樣" },
-      { file: "權利與義務探險隊-第6頁.png", thumb: "thumbs/page-06.webp", label: "第 6 頁｜自由的界線" },
-      { file: "權利與義務探險隊-第7頁.png", thumb: "thumbs/page-07.webp", label: "第 7 頁｜小小市長選舉" },
-      { file: "權利與義務探險隊-第8頁.png", thumb: "thumbs/page-08.webp", label: "第 8 頁｜人民如何參與國家" },
-      { file: "權利與義務探險隊-第9頁.png", thumb: "thumbs/page-09.webp", label: "第 9 頁｜發票變成城市力量" },
-      { file: "權利與義務探險隊-第10頁.png", thumb: "thumbs/page-10.webp", label: "第 10 頁｜公共的錢，要用在需要的地方" },
-      { file: "權利與義務探險隊-第11頁.png", thumb: "thumbs/page-11.webp", label: "第 11 頁｜誰在守護我們？" },
-      { file: "權利與義務探險隊-第12頁.png", thumb: "thumbs/page-12.webp", label: "第 12 頁｜政策為什麼會改變？" },
-      { file: "權利與義務探險隊-第13頁.png", thumb: "thumbs/page-13.webp", label: "第 13 頁｜入學通知單的秘密" },
-      { file: "權利與義務探險隊-第14頁.png", thumb: "thumbs/page-14.webp", label: "第 14 頁｜學習，讓未來發光" }
+      { file: "large/page-01.webp", thumb: "thumbs/page-01.webp", label: "第 1 頁｜神祕的憲法之門" },
+      { file: "large/page-02.webp", thumb: "thumbs/page-02.webp", label: "第 2 頁｜憲法會跟著社會改變" },
+      { file: "large/page-03.webp", thumb: "thumbs/page-03.webp", label: "第 3 頁｜不一樣，也能公平參與" },
+      { file: "large/page-04.webp", thumb: "thumbs/page-04.webp", label: "第 4 頁｜拒絕用標籤看人" },
+      { file: "large/page-05.webp", thumb: "thumbs/page-05.webp", label: "第 5 頁｜評論和謾罵不一樣" },
+      { file: "large/page-06.webp", thumb: "thumbs/page-06.webp", label: "第 6 頁｜自由的界線" },
+      { file: "large/page-07.webp", thumb: "thumbs/page-07.webp", label: "第 7 頁｜小小市長選舉" },
+      { file: "large/page-08.webp", thumb: "thumbs/page-08.webp", label: "第 8 頁｜人民如何參與國家" },
+      { file: "large/page-09.webp", thumb: "thumbs/page-09.webp", label: "第 9 頁｜發票變成城市力量" },
+      { file: "large/page-10.webp", thumb: "thumbs/page-10.webp", label: "第 10 頁｜公共的錢，要用在需要的地方" },
+      { file: "large/page-11.webp", thumb: "thumbs/page-11.webp", label: "第 11 頁｜誰在守護我們？" },
+      { file: "large/page-12.webp", thumb: "thumbs/page-12.webp", label: "第 12 頁｜政策為什麼會改變？" },
+      { file: "large/page-13.webp", thumb: "thumbs/page-13.webp", label: "第 13 頁｜入學通知單的秘密" },
+      { file: "large/page-14.webp", thumb: "thumbs/page-14.webp", label: "第 14 頁｜學習，讓未來發光" }
     ];
     const gallery = document.querySelector("#gallery");
     const lightbox = document.querySelector("#lightbox");
@@ -75,7 +75,7 @@
       card.addEventListener("keydown", event => { if (event.key === "Enter" || event.key === " ") openPage(index); });
       gallery.append(card);
     });
-    function openPage(index) { current = (index + pages.length) % pages.length; largeImage.src = encodeURI(pages[current].file); largeImage.alt = pages[current].label; status.textContent = `${pages[current].label}（${current + 1} / ${pages.length}）`; lightbox.showModal(); }
+    function openPage(index) { current = (index + pages.length) % pages.length; status.textContent = `${pages[current].label}｜載入中…`; largeImage.onload = () => { status.textContent = `${pages[current].label}（${current + 1} / ${pages.length}）`; }; largeImage.src = encodeURI(pages[current].file); largeImage.alt = pages[current].label; lightbox.showModal(); }
     function step(delta) { openPage(current + delta); }
     document.querySelector("#close").addEventListener("click", () => lightbox.close());
     document.querySelector("#prev").addEventListener("click", () => step(-1));
